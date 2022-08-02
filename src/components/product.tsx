@@ -16,14 +16,15 @@ export default function ActionAreaCard() {
           alt="green iguana"
           style={{width: '250px'}}
         />
-        <CardContent style={{textAlign: 'left'}}>
-          <Typography gutterBottom variant="h5" component="div">
+        <CardContent style={{textAlign: 'left', display: 'grid', gap: '10px'}}>
+          <Typography variant="h5" component="div">
             Lizard
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Lizards are a widespread group of squamate reptiles, with over 6,000
             species, ranging across all continents except Antarctica
           </Typography>
+          <Typography variant='h5'>$450</Typography>
         </CardContent>
       </CardActionArea>
     </Card>
