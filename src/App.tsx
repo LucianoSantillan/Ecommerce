@@ -8,39 +8,14 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import { fontWeight } from '@mui/system';
 import ActionAreaCard from './components/product';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
-
+import { Navbar } from './components/navbar';
 
 function App() {
 
   return (
     <div className="App" style={{ backgroundColor: '#ebebeb' }}>
-      <div style={{
-        width: '100%',
-        background: '#fff',
-        padding: '6px',
-        marginBottom: '20px',
-        boxShadow: 'rgb(0 0 0 / 20%) 0px 2px 4px -1px, rgb(0 0 0 / 14%) 0px 4px 5px 0px, rgb(0 0 0 / 12%) 0px 1px 10px 0px',
 
-      }}>
-        <div
-          className='container'
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            margin: 'auto'
-          }}>
-          <div>
-            <img src={logo} alt="" height={'60px'} />
-            <img src={logoNombre} alt="" height={'60px'} style={{marginLeft: '-35px'}}/>
-          </div>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-          ><ShoppingCart /></IconButton>
-        </div>
-      </div>
+      <Navbar />
       <div className='container' style={{ display: 'inline-flex', margin: 'auto' }}>
         <Filter />
         <ProductList />
@@ -139,6 +114,10 @@ const FilterOption: FC<{ title: string }> = ({ title }) => {
   return <Typography variant='subtitle1'>{title}</Typography>
 }
 
+export function Separator() {
+  return (<hr style={{ border: 'none', borderTop: '1px solid #bcccdc' }} />)
+}
+
 function ProductList() {
   const img = { maxHeight: '230px', maxWidth: '230px', display: 'flex' }
 
@@ -148,7 +127,7 @@ function ProductList() {
         <div style={{ display: 'flex', padding: '15px', alignItems: 'center' }}>
           <div>40 Product found</div>
           <div style={{ flex: 1, padding: '0 20px' }}>
-            <hr style={{ border: 'none', borderTop: '1px solid #bcccdc' }} />
+            <Separator />
           </div>
           <div style={{ marginRight: '5px' }}>Ordenar por</div>
           <OrderBySelector />

@@ -4,19 +4,26 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function ActionAreaCard() {
+  let history = useNavigate();
+
   return (
     <Card >
-      <CardActionArea style={{display: 'flex', padding: '10px'}}>
+      <CardActionArea style={{ display: 'flex', padding: '10px' }} onClick={() => {
+        history(`/details`);
+
+      }}>
         <CardMedia
           component="img"
           height="250px"
           image="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSMxbasiw5cWT9eJgi5j_P3lfnuDjhK-wFMy7UTrG61DSx-fDlIVkucLf--9dGPKDwxNHsOTW5fALVrv7uXEYJIOR4pxOyATLrmP5pKWj1VthcHGTSz8Lq-&usqp=CAE"
           alt="green iguana"
-          style={{width: '250px'}}
+          style={{ width: '250px' }}
         />
-        <CardContent style={{textAlign: 'left', display: 'grid', gap: '10px'}}>
+        <CardContent style={{ textAlign: 'left', display: 'grid', gap: '10px' }}>
           <Typography variant="h5" component="div">
             Lizard
           </Typography>
