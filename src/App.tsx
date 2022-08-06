@@ -4,27 +4,44 @@ import { Card, FormControl, FormControlLabel, InputAdornment, InputLabel, MenuIt
 import ActionAreaCard from './components/product';
 import { Navbar } from './components/navbar';
 import axios from 'axios';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function App() {
 
+  console.log('App');
+
   const [products, setProducts] = React.useState<any[]>([]);
+  let navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const categoryQueryParam = searchParams.get('category');
+  const [category, setCategory] = React.useState<string>(categoryQueryParam ?? 't-shirt');
+
+
+  useEffect(() => {
+    if (category !== categoryQueryParam) {
+      console.log('renavigate')
+      navigate('?category=' + category);
+    }
+  }, [category])
 
   useEffect(() => {
     console.log('useEffect')
     axios
-      .get("http://localhost:4000/api/products?priceRange=110-150")
+      .get("http://localhost:4000/api/products?category=" + category)
       .then(function (response) {
         setProducts(response.data);
       })
 
-  }, [])
+  }, [category])
 
   return (
-    <div className="App" style={{ backgroundColor: '#ebebeb' }}>
+    <div className="App" style={{ backgroundColor: '#ebebeb', minHeight: '100vh' }}>
 
       <Navbar />
       <div className='container' style={{ display: 'inline-flex', margin: 'auto' }}>
-        <Filter />
+        <Filter category={category} onCategoryChange={(newValue) => {
+          setCategory(newValue)
+        }} />
         <ProductList products={products} />
       </div>
 
@@ -36,7 +53,7 @@ const FilterOptionsContainer: FC<{ children: React.ReactNode }> = ({ children })
   return <div style={{ paddingLeft: '7px' }}>{children}</div>
 }
 
-function Filter() {
+const Filter: FC<{ category: string, onCategoryChange: (newValue: string) => void }> = ({ category, onCategoryChange }) => {
   return (
     <Card style={{ padding: '10px', marginRight: '15px', height: 'auto' }}>
       <div style={{ marginRight: '10px', display: 'flex', flexDirection: 'column', alignItems: 'left', textAlign: 'left' }}>
@@ -52,12 +69,13 @@ function Filter() {
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="female"
+              defaultValue={category}
               name="radio-buttons-group"
+              onChange={(event, value) => { onCategoryChange(value) }}
             >
-              <FormControlLabel value="female" control={<Radio size='small' />} label="T-shirt" />
-              <FormControlLabel value="male" control={<Radio size='small' />} label="Pants" />
-              <FormControlLabel value="other" control={<Radio size='small' />} label="Shoes" />
+              <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="T-shirt" />
+              <FormControlLabel value="pants" control={<Radio size='small' />} label="Pants" />
+              <FormControlLabel value="shoes" control={<Radio size='small' />} label="Shoes" />
             </RadioGroup>
           </FormControl>
         </FilterOptionsContainer>
@@ -107,7 +125,7 @@ function Filter() {
 
 
       </div>
-    </Card>
+    </Card >
   )
 }
 
@@ -135,7 +153,7 @@ const ProductList: FC<{ products: any[] }> = ({ products }) => {
           <OrderBySelector />
         </div>
       </Card>
-      <div style={{ display: 'grid', gap: '5px' }}>
+      <div style={{ display: 'grid', gap: '5px', minWidth: '900px', }}>
         {products.map((product, index) => {
           return (
             <ActionAreaCard

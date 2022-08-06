@@ -12,7 +12,7 @@ const ActionAreaCard: FC<{ imgUrl: string, title: string, description: string, p
 
   return (
     <Card >
-      <CardActionArea style={{ display: 'flex', padding: '10px', minWidth: '900px', justifyContent: 'flex-start' }} onClick={() => {
+      <CardActionArea style={{ display: 'flex', padding: '10px', justifyContent: 'flex-start' }} onClick={() => {
         history(`/details`);
 
       }}>

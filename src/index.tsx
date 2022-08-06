@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ProductDetail } from './pages/ProductDetail/ProductDetail';
 
 const root = ReactDOM.createRoot(
@@ -15,6 +15,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
+
         </Route>
         <Route path="details" element={<ProductDetail />} />
       </Routes>
