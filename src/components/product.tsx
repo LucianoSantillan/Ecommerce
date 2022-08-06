@@ -1,13 +1,13 @@
-import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { FC } from 'react';
 
 
-export default function ActionAreaCard() {
+const ActionAreaCard: FC<{ imgUrl: string, title: string, description: string, price: number }> = ({ imgUrl, title, description, price }) => {
   let history = useNavigate();
 
   return (
@@ -19,21 +19,22 @@ export default function ActionAreaCard() {
         <CardMedia
           component="img"
           height="250px"
-          image="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSMxbasiw5cWT9eJgi5j_P3lfnuDjhK-wFMy7UTrG61DSx-fDlIVkucLf--9dGPKDwxNHsOTW5fALVrv7uXEYJIOR4pxOyATLrmP5pKWj1VthcHGTSz8Lq-&usqp=CAE"
+          image={imgUrl}
           alt="green iguana"
           style={{ width: '250px' }}
         />
         <CardContent style={{ textAlign: 'left', display: 'grid', gap: '10px' }}>
           <Typography variant="h5" component="div">
-            Lizard
+            {title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+            {description}
           </Typography>
-          <Typography variant='h5'>$450</Typography>
+          <Typography variant='h5'>${price}</Typography>
         </CardContent>
       </CardActionArea>
     </Card>
   );
 }
+
+export default ActionAreaCard;

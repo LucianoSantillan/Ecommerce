@@ -1,12 +1,5 @@
-import React, { FC } from 'react';
-import logo from './assets/images/logo.png';
-import logoNombre from './assets/images/logo-nombre.webp';
 import '../../App.css';
-import { Button, Card, CardActionArea, CardContent, CardMedia, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, Typography } from '@mui/material';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import GridViewIcon from '@mui/icons-material/GridView';
-import { fontWeight } from '@mui/system';
-import ShoppingCart from '@mui/icons-material/ShoppingCart';
+import { Button, CardContent, CardMedia, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Separator } from '../../App';
 import Counter from '../../components/counter';
@@ -14,8 +7,6 @@ import { Navbar } from '../../components/navbar';
 
 
 export function ProductDetail() {
-
-  const history = useNavigate()
 
   return (
     <>

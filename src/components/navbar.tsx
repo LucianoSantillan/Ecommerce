@@ -1,4 +1,3 @@
-import React, { FC } from 'react';
 import '../App.css';
 import logo from '../assets/images/logo.png';
 import logoNombre from '../assets/images/logo-nombre.webp';

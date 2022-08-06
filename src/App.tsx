@@ -1,16 +1,23 @@
-import React, { FC } from 'react';
-import logo from './assets/images/logo.png';
-import logoNombre from './assets/images/logo-nombre.webp';
+import React, { FC, useEffect } from 'react';
 import './App.css';
-import { Button, Card, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, Typography } from '@mui/material';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import GridViewIcon from '@mui/icons-material/GridView';
-import { fontWeight } from '@mui/system';
+import { Card, FormControl, FormControlLabel, InputAdornment, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, Typography } from '@mui/material';
 import ActionAreaCard from './components/product';
-import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import { Navbar } from './components/navbar';
+import axios from 'axios';
 
 function App() {
+
+  const [products, setProducts] = React.useState<any[]>([]);
+
+  useEffect(() => {
+    console.log('useEffect')
+    axios
+      .get("http://localhost:4000/api/products?priceRange=110-150")
+      .then(function (response) {
+        setProducts(response.data);
+      })
+
+  }, [])
 
   return (
     <div className="App" style={{ backgroundColor: '#ebebeb' }}>
@@ -18,7 +25,7 @@ function App() {
       <Navbar />
       <div className='container' style={{ display: 'inline-flex', margin: 'auto' }}>
         <Filter />
-        <ProductList />
+        <ProductList products={products} />
       </div>
 
 
@@ -110,16 +117,11 @@ const FilterTitle: FC<{ title: string }> = ({ title }) => {
   )
 }
 
-const FilterOption: FC<{ title: string }> = ({ title }) => {
-  return <Typography variant='subtitle1'>{title}</Typography>
-}
-
 export function Separator() {
   return (<hr style={{ border: 'none', borderTop: '1px solid #bcccdc' }} />)
 }
 
-function ProductList() {
-  const img = { maxHeight: '230px', maxWidth: '230px', display: 'flex' }
+const ProductList: FC<{ products: any[] }> = ({ products }) => {
 
   return (
     <div>
@@ -134,9 +136,15 @@ function ProductList() {
         </div>
       </Card>
       <div style={{ display: 'grid', gap: '5px' }}>
-        <ActionAreaCard />
-        <ActionAreaCard />
-        <ActionAreaCard />
+        {products.map((product, index) => {
+          return (
+            <ActionAreaCard
+              imgUrl={product.imgUrl}
+              title={product.name}
+              description={product.description}
+              price={product.price} />
+          )
+        })}
       </div>
     </div >
   )
