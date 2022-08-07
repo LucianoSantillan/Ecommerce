@@ -8,8 +8,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function App() {
 
-  console.log('App');
-
   const [products, setProducts] = React.useState<any[]>([]);
   let navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -35,7 +33,7 @@ function App() {
   }, [category])
 
   return (
-    <div className="App" style={{ backgroundColor: '#ebebeb', minHeight: '100vh' }}>
+    <div className="App" style={{ backgroundColor: '#ebebeb', minHeight: '100vh', paddingBottom: '20px' }}>
 
       <Navbar />
       <div className='container' style={{ display: 'inline-flex', margin: 'auto' }}>
