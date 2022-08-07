@@ -69,6 +69,24 @@ const Filter: FC<{ category: string, onCategoryChange: (newValue: string) => voi
         </div>
         <br />
 
+
+        <FilterTitle title='For who?' />
+        <div>
+          <FormControl>
+            <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue={category}
+              name="radio-buttons-group"
+              onChange={(event, value) => { onCategoryChange(value) }}
+            >
+              <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="No especificado" />
+              <FormControlLabel value="pants" control={<Radio size='small' />} label="Hombre" />
+              <FormControlLabel value="shoes" control={<Radio size='small' />} label="Mujer" />
+            </RadioGroup>
+          </FormControl>
+        </div>
+        <br />
+
         <FilterTitle title='Price' />
         <div>
           <FormControl fullWidth sx={{ width: '100px', mr: '4px' }} size="small">
