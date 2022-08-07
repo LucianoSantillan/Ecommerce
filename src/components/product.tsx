@@ -24,10 +24,10 @@ const ActionAreaCard: FC<{ imgUrl: string, title: string, description: string, p
           style={{ width: '250px' }}
         />
         <CardContent style={{ textAlign: 'left', display: 'grid', gap: '10px' }}>
-          <Typography variant="h5" component="div">
+          <Typography variant="h5" component="div" style={{ textTransform: 'capitalize' }}>
             {title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" style={{ textTransform: 'capitalize' }}>
             {description}
           </Typography>
           <Typography variant='h5'>${price}</Typography>
