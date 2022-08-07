@@ -47,23 +47,13 @@ function App() {
     </div>
   );
 }
-const FilterOptionsContainer: FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <div style={{ paddingLeft: '7px' }}>{children}</div>
-}
 
 const Filter: FC<{ category: string, onCategoryChange: (newValue: string) => void }> = ({ category, onCategoryChange }) => {
   return (
     <Card style={{ padding: '10px', marginRight: '15px', height: 'auto' }}>
       <div style={{ marginRight: '10px', display: 'flex', flexDirection: 'column', alignItems: 'left', textAlign: 'left' }}>
         <FilterTitle title='Category' />
-
-
-
-
-
-
-
-        <FilterOptionsContainer>
+        <div>
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
@@ -76,50 +66,30 @@ const Filter: FC<{ category: string, onCategoryChange: (newValue: string) => voi
               <FormControlLabel value="shoes" control={<Radio size='small' />} label="Shoes" />
             </RadioGroup>
           </FormControl>
-        </FilterOptionsContainer>
-        <br />
-        <FilterTitle title='For who?' />
-        <FilterOptionsContainer>
-          <FormControl fullWidth style={{ width: '130px' }} size="small">
-            {/* <InputLabel id="demo-simple-select-label">Order by</InputLabel> */}
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={10}
-              // label="Age"
-              onChange={() => { }}
-            >
-              <MenuItem value={10}>Women</MenuItem>
-              <MenuItem value={20}>Men</MenuItem>
-            </Select>
-          </FormControl>
-        </FilterOptionsContainer>
-
+        </div>
         <br />
 
         <FilterTitle title='Price' />
-        <FilterOptionsContainer>
+        <div>
           <FormControl fullWidth sx={{ width: '100px', mr: '4px' }} size="small">
-            <InputLabel htmlFor="outlined-adornment-amount">From</InputLabel>
             <OutlinedInput
               id="outlined-adornment-amount"
-              value={100000}
+              placeholder='Min'
+              value={''}
               onChange={() => { }}
               startAdornment={<InputAdornment position="start">$</InputAdornment>}
-              label="Amount"
             />
           </FormControl>
           <FormControl fullWidth sx={{ width: '100px' }} size="small">
-            <InputLabel htmlFor="outlined-adornment-amount">To</InputLabel>
             <OutlinedInput
               id="outlined-adornment-amount"
-              value={999999}
+              placeholder='Max'
+              value={''}
               onChange={() => { }}
               startAdornment={<InputAdornment position="start">$</InputAdornment>}
-              label="Amount"
             />
           </FormControl>
-        </FilterOptionsContainer>
+        </div>
 
 
       </div>
