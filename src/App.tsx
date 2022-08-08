@@ -15,6 +15,7 @@ function App() {
   const [category, setCategory] = React.useState<string>(categoryQueryParam ?? 't-shirt');
   const [minPrice, setMinPrice] = React.useState<string>('');
   const [maxPrice, setMaxPrice] = React.useState<string>('');
+  const [forWho, setForWho] = React.useState<string>('');
 
   useEffect(() => {
     axios
@@ -43,6 +44,10 @@ function App() {
           onMaxPriceChange={(newValue) => {
             setMaxPrice(newValue)
           }}
+          forWho={forWho}
+          onForWhoChange={(newValue) => {
+            setForWho(newValue)
+          }}
         />
         < ProductList products={products} />
       </div>
@@ -58,7 +63,9 @@ const Filter: FC<{
   minPrice: string,
   maxPrice: string,
   onMinPriceChange: (newValue: string) => void,
-  onMaxPriceChange: (newValue: string) => void
+  onMaxPriceChange: (newValue: string) => void,
+  forWho: string,
+  onForWhoChange: (newValue: string) => void,
 }> = (
   {
     category,
@@ -66,11 +73,13 @@ const Filter: FC<{
     minPrice,
     maxPrice,
     onMinPriceChange,
-    onMaxPriceChange
+    onMaxPriceChange,
+    forWho,
+    onForWhoChange
   }) => {
 
     let navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     return (
       <Card style={{ padding: '10px', marginRight: '15px', height: 'auto' }}>
@@ -102,13 +111,20 @@ const Filter: FC<{
             <FormControl>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={category}
+                defaultValue={forWho}
                 name="radio-buttons-group"
-                onChange={(event, value) => { onCategoryChange(value) }}
+                onChange={(event, value) => {
+                  onForWhoChange(value)
+                  searchParams.set('forWho', value)
+                  if (!value) {
+                    searchParams.delete('forWho')
+                  }
+                  setSearchParams(searchParams);
+                }}
               >
-                <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="Not specified" />
-                <FormControlLabel value="pants" control={<Radio size='small' />} label="Man" />
-                <FormControlLabel value="shoes" control={<Radio size='small' />} label="Woman" />
+                <FormControlLabel value="" control={<Radio size='small' />} label="Not specified" />
+                <FormControlLabel value="man" control={<Radio size='small' />} label="Man" />
+                <FormControlLabel value="woman" control={<Radio size='small' />} label="Woman" />
               </RadioGroup>
             </FormControl>
           </div>
