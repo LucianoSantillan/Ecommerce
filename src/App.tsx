@@ -160,7 +160,13 @@ const Filter: FC<{
                 () => {
                   searchParams.set('minPrice', `${minPrice}`)
                   searchParams.set('maxPrice', `${maxPrice}`)
-                  navigate('?' + searchParams.toString())
+                  if (!minPrice) {
+                    searchParams.delete('minPrice')
+                  }
+                  if (!maxPrice) {
+                    searchParams.delete('maxPrice')
+                  }
+                  setSearchParams(searchParams)
                 }}
             ><Search /></IconButton>
           </div>
