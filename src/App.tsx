@@ -1,46 +1,50 @@
 import React, { FC, useEffect } from 'react';
 import './App.css';
-import { Card, FormControl, FormControlLabel, InputAdornment, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, Typography } from '@mui/material';
+import { Avatar, Button, Card, FormControl, FormControlLabel, Icon, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, Typography } from '@mui/material';
 import ActionAreaCard from './components/product';
 import { Navbar } from './components/navbar';
 import axios from 'axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Search, ShoppingCart } from '@mui/icons-material';
 
 function App() {
 
   const [products, setProducts] = React.useState<any[]>([]);
-  let navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const categoryQueryParam = searchParams.get('category');
   const [category, setCategory] = React.useState<string>(categoryQueryParam ?? 't-shirt');
-
-
-  useEffect(() => {
-    if (category !== categoryQueryParam) {
-      console.log('renavigate')
-      navigate('?category=' + category);
-    }
-  }, [category])
+  const [minPrice, setMinPrice] = React.useState<string>('');
+  const [maxPrice, setMaxPrice] = React.useState<string>('');
 
   useEffect(() => {
-    console.log('useEffect')
     axios
-      .get("http://localhost:4000/api/products?category=" + category)
+      .get(`http://localhost:4000/api/products?${searchParams.toString()}`)
       .then(function (response) {
         setProducts(response.data);
       })
 
-  }, [category])
+  }, [searchParams.toString()])
 
   return (
     <div className="App" style={{ backgroundColor: '#ebebeb', minHeight: '100vh', paddingBottom: '20px' }}>
 
       <Navbar />
       <div className='container' style={{ display: 'inline-flex', margin: 'auto' }}>
-        <Filter category={category} onCategoryChange={(newValue) => {
-          setCategory(newValue)
-        }} />
-        <ProductList products={products} />
+        <Filter
+          category={category}
+          onCategoryChange={(newValue) => {
+            setCategory(newValue)
+          }}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          onMinPriceChange={(newValue) => {
+            setMinPrice(newValue)
+          }}
+          onMaxPriceChange={(newValue) => {
+            setMaxPrice(newValue)
+          }}
+        />
+        < ProductList products={products} />
       </div>
 
 
@@ -48,72 +52,107 @@ function App() {
   );
 }
 
-const Filter: FC<{ category: string, onCategoryChange: (newValue: string) => void }> = ({ category, onCategoryChange }) => {
-  return (
-    <Card style={{ padding: '10px', marginRight: '15px', height: 'auto' }}>
-      <div style={{ marginRight: '10px', display: 'flex', flexDirection: 'column', alignItems: 'left', textAlign: 'left' }}>
-        <FilterTitle title='Category' />
-        <div>
-          <FormControl>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue={category}
-              name="radio-buttons-group"
-              onChange={(event, value) => { onCategoryChange(value) }}
-            >
-              <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="T-shirt" />
-              <FormControlLabel value="pants" control={<Radio size='small' />} label="Pants" />
-              <FormControlLabel value="shoes" control={<Radio size='small' />} label="Shoes" />
-            </RadioGroup>
-          </FormControl>
+const Filter: FC<{
+  category: string,
+  onCategoryChange: (newValue: string) => void,
+  minPrice: string,
+  maxPrice: string,
+  onMinPriceChange: (newValue: string) => void,
+  onMaxPriceChange: (newValue: string) => void
+}> = (
+  {
+    category,
+    onCategoryChange,
+    minPrice,
+    maxPrice,
+    onMinPriceChange,
+    onMaxPriceChange
+  }) => {
+
+    let navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    return (
+      <Card style={{ padding: '10px', marginRight: '15px', height: 'auto' }}>
+        <div style={{ marginRight: '10px', display: 'flex', flexDirection: 'column', alignItems: 'left', textAlign: 'left' }}>
+          <FilterTitle title='Category' />
+          <div>
+            <FormControl>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue={category}
+                name="radio-buttons-group"
+                onChange={(event, value) => {
+                  onCategoryChange(value)
+                  navigate('?category=' + value);
+                }}
+              >
+                <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="T-shirt" />
+                <FormControlLabel value="pants" control={<Radio size='small' />} label="Pants" />
+                <FormControlLabel value="shoes" control={<Radio size='small' />} label="Shoes" />
+              </RadioGroup>
+            </FormControl>
+          </div>
+          <br />
+
+
+          <FilterTitle title='For who?' />
+          <div>
+            <FormControl>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue={category}
+                name="radio-buttons-group"
+                onChange={(event, value) => { onCategoryChange(value) }}
+              >
+                <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="No especificado" />
+                <FormControlLabel value="pants" control={<Radio size='small' />} label="Hombre" />
+                <FormControlLabel value="shoes" control={<Radio size='small' />} label="Mujer" />
+              </RadioGroup>
+            </FormControl>
+          </div>
+          <br />
+
+          <FilterTitle title='Price' />
+          <div style={{ display: 'flex', alignItems: 'center' }} >
+            <FormControl fullWidth sx={{ width: '100px', mr: '4px' }} size="small">
+              <OutlinedInput
+                id="outlined-adornment-amount"
+                placeholder='Min'
+                value={minPrice}
+                onChange={(event) => { onMinPriceChange(event.target.value) }}
+                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+              />
+            </FormControl>
+            <FormControl fullWidth sx={{ width: '100px', marginRight: '17px' }} size="small">
+              <OutlinedInput
+                id="outlined-adornment-amount"
+                placeholder='Max'
+                value={maxPrice}
+                onChange={(event) => { onMaxPriceChange(event.target.value) }}
+                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+              />
+            </FormControl>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              style={{ backgroundColor: '#1976d2' }}
+              onClick={
+                () => {
+                  searchParams.set('minPrice', `${minPrice}`)
+                  searchParams.set('maxPrice', `${maxPrice}`)
+                  navigate('?' + searchParams.toString())
+                }}
+            ><Search /></IconButton>
+          </div>
+
+
         </div>
-        <br />
-
-
-        <FilterTitle title='For who?' />
-        <div>
-          <FormControl>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue={category}
-              name="radio-buttons-group"
-              onChange={(event, value) => { onCategoryChange(value) }}
-            >
-              <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="No especificado" />
-              <FormControlLabel value="pants" control={<Radio size='small' />} label="Hombre" />
-              <FormControlLabel value="shoes" control={<Radio size='small' />} label="Mujer" />
-            </RadioGroup>
-          </FormControl>
-        </div>
-        <br />
-
-        <FilterTitle title='Price' />
-        <div>
-          <FormControl fullWidth sx={{ width: '100px', mr: '4px' }} size="small">
-            <OutlinedInput
-              id="outlined-adornment-amount"
-              placeholder='Min'
-              value={''}
-              onChange={() => { }}
-              startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            />
-          </FormControl>
-          <FormControl fullWidth sx={{ width: '100px' }} size="small">
-            <OutlinedInput
-              id="outlined-adornment-amount"
-              placeholder='Max'
-              value={''}
-              onChange={() => { }}
-              startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            />
-          </FormControl>
-        </div>
-
-
-      </div>
-    </Card >
-  )
-}
+      </Card >
+    )
+  }
 
 const FilterTitle: FC<{ title: string }> = ({ title }) => {
   return (
