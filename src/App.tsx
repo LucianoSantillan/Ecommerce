@@ -84,7 +84,8 @@ const Filter: FC<{
                 name="radio-buttons-group"
                 onChange={(event, value) => {
                   onCategoryChange(value)
-                  navigate('?category=' + value);
+                  searchParams.set('category', value)
+                  navigate('?' + searchParams.toString())
                 }}
               >
                 <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="T-shirt" />
