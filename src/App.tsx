@@ -106,9 +106,9 @@ const Filter: FC<{
                 name="radio-buttons-group"
                 onChange={(event, value) => { onCategoryChange(value) }}
               >
-                <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="No especificado" />
-                <FormControlLabel value="pants" control={<Radio size='small' />} label="Hombre" />
-                <FormControlLabel value="shoes" control={<Radio size='small' />} label="Mujer" />
+                <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="Not specified" />
+                <FormControlLabel value="pants" control={<Radio size='small' />} label="Man" />
+                <FormControlLabel value="shoes" control={<Radio size='small' />} label="Woman" />
               </RadioGroup>
             </FormControl>
           </div>
