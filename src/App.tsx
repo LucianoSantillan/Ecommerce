@@ -49,7 +49,7 @@ function App() {
             setForWho(newValue)
           }}
         />
-        < ProductList products={products} />
+        <ProductList products={products} />
       </div>
 
 
@@ -202,6 +202,7 @@ const ProductList: FC<{ products: any[] }> = ({ products }) => {
         </div>
       </Card>
       <div style={{ display: 'grid', gap: '5px', minWidth: '900px', }}>
+        {products.length === 0 && <div>No products found</div>}
         {products.map((product, index) => {
           return (
             <ActionAreaCard
