@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import './App.css';
-import { Avatar, Button, Card, FormControl, FormControlLabel, Icon, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, Typography } from '@mui/material';
+import { Avatar, Button, Card, FormControl, FormControlLabel, Icon, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Radio, RadioGroup, Select, Typography } from '@mui/material';
 import ActionAreaCard from './components/product';
 import { Navbar } from './components/navbar';
 import axios from 'axios';
@@ -10,18 +10,21 @@ import { Search, ShoppingCart } from '@mui/icons-material';
 function App() {
 
   const [products, setProducts] = React.useState<any[]>([]);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const categoryQueryParam = searchParams.get('category');
   const [category, setCategory] = React.useState<string>(categoryQueryParam ?? 't-shirt');
   const [minPrice, setMinPrice] = React.useState<string>('');
   const [maxPrice, setMaxPrice] = React.useState<string>('');
   const [forWho, setForWho] = React.useState<string>('');
+  const [page, setPage] = React.useState<number>(1);
+  const [pages, setPages] = React.useState<number>(0);
 
   useEffect(() => {
     axios
       .get(`http://localhost:4000/api/products?${searchParams.toString()}`)
       .then(function (response) {
-        setProducts(response.data);
+        setProducts(response.data.products);
+        setPages(response.data.pages);
       })
 
   }, [searchParams.toString()])
@@ -49,7 +52,17 @@ function App() {
             setForWho(newValue)
           }}
         />
-        <ProductList products={products} />
+        <ProductList
+          products={products}
+          page={page}
+          onPageChange={(newValue) => {
+            setPage(newValue)
+            searchParams.set('page', `${newValue}`)
+            setSearchParams(searchParams)
+          }}
+          pages={pages}
+        />
+
       </div>
 
 
@@ -187,7 +200,14 @@ export function Separator() {
   return (<hr style={{ border: 'none', borderTop: '1px solid #bcccdc' }} />)
 }
 
-const ProductList: FC<{ products: any[] }> = ({ products }) => {
+const ProductList: FC<{
+  products: any[],
+  page: number,
+  onPageChange: (value: number) => void,
+  pages: number,
+}> = ({ products, page, onPageChange, pages }) => {
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   return (
     <div>
@@ -213,6 +233,18 @@ const ProductList: FC<{ products: any[] }> = ({ products }) => {
           )
         })}
       </div>
+      {!!pages && (
+        <Card style={{ width: 'fit-content', padding: '10px', margin: 'auto', marginTop: '15px' }}>
+          <Pagination
+            count={pages}
+            variant="outlined"
+            color="primary"
+            page={page}
+            size="large"
+            onChange={(_, page) => onPageChange(page)} />
+        </Card>
+      )}
+
     </div >
   )
 }
