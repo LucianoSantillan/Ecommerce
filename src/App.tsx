@@ -238,6 +238,7 @@ const ProductList: FC<{
         {products.map((product, index) => {
           return (
             <ActionAreaCard
+              _key={product.id}
               imgUrl={product.imgUrl}
               title={product.name}
               description={product.description}

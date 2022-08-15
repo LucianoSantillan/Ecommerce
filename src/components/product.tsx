@@ -7,11 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { FC } from 'react';
 
 
-const ActionAreaCard: FC<{ imgUrl: string, title: string, description: string, price: number }> = ({ imgUrl, title, description, price }) => {
+const ActionAreaCard: FC<{ imgUrl: string, title: string, description: string, price: number, _key: any }> = ({ imgUrl, title, description, price, _key }) => {
   let history = useNavigate();
-
   return (
-    <Card >
+    <Card key={_key}>
       <CardActionArea style={{ display: 'flex', padding: '10px', justifyContent: 'flex-start' }} onClick={() => {
         history(`/details`);
 
