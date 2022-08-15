@@ -12,7 +12,8 @@ function App() {
   const [products, setProducts] = React.useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryQueryParam = searchParams.get('category');
-  const [category, setCategory] = React.useState<string>(categoryQueryParam ?? 't-shirt');
+  const categoryByDefault = 't-shirt'
+  const [category, setCategory] = React.useState<string>(categoryQueryParam ?? categoryByDefault);
   const [minPrice, setMinPrice] = React.useState<string>('');
   const [maxPrice, setMaxPrice] = React.useState<string>('');
   const [forWho, setForWho] = React.useState<string>('');
@@ -20,8 +21,14 @@ function App() {
   const [pages, setPages] = React.useState<number>(0);
 
   useEffect(() => {
+    let url = `http://localhost:4000/api/products?${searchParams.toString()}`
+
+    if (!categoryQueryParam) {
+      url = `http://localhost:4000/api/products?category=${categoryByDefault}&${searchParams.toString()}`
+    }
+
     axios
-      .get(`http://localhost:4000/api/products?${searchParams.toString()}`)
+      .get(url)
       .then(function (response) {
         setProducts(response.data.products);
         setPages(response.data.pages);
