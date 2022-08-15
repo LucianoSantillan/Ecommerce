@@ -36,3 +36,9 @@ test('should show page 2 writen in url when page 2 button is clicked', async () 
   await act(() => userEvent.click(buttonPage2))
   expect(new URLSearchParams(window.location.search).get('page')).toBe('2')
 });
+
+test('should show found products total from request response', async () => {
+  render(<BrowserRouter>
+    <App /></BrowserRouter>);
+  await screen.findByText('4 Product/s found');
+});

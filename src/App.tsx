@@ -20,6 +20,7 @@ function App() {
   const [forWho, setForWho] = React.useState<string>('');
   const [page, setPage] = React.useState<number>(pageQueryParam || 1);
   const [pages, setPages] = React.useState<number>(0);
+  const [totalItemsFound, setTotalItemsFound] = React.useState<number>(0);
 
   useEffect(() => {
     let url = `http://localhost:4000/api/products?${searchParams.toString()}`
@@ -33,6 +34,7 @@ function App() {
       .then(function (response) {
         setProducts(response.data.products);
         setPages(response.data.pages);
+        setTotalItemsFound(response.data.total);
       })
 
   }, [searchParams.toString()])
@@ -75,6 +77,7 @@ function App() {
             setSearchParams(searchParams)
           }}
           pages={pages}
+          totalItemsFound={totalItemsFound}
         />
 
       </div>
@@ -219,13 +222,14 @@ const ProductList: FC<{
   page: number,
   onPageChange: (value: number) => void,
   pages: number,
-}> = ({ products, page, onPageChange, pages }) => {
+  totalItemsFound: number,
+}> = ({ products, page, onPageChange, pages, totalItemsFound }) => {
 
   return (
     <div>
       <Card style={{ marginBottom: '15px' }}>
         <div style={{ display: 'flex', padding: '15px', alignItems: 'center' }}>
-          <div>40 Product found</div>
+          <div>{totalItemsFound} Product/s found</div>
           <div style={{ flex: 1, padding: '0 20px' }}>
             <Separator />
           </div>
