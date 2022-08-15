@@ -41,7 +41,7 @@ function App() {
     searchParams.set('page', '1')
     setPage(1)
     setSearchParams(searchParams)
-  }, [category])
+  }, [category, forWho])
 
   return (
     <div className="App" style={{ backgroundColor: '#ebebeb', minHeight: '100vh', paddingBottom: '20px' }}>
