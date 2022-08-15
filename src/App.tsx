@@ -12,12 +12,13 @@ function App() {
   const [products, setProducts] = React.useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryQueryParam = searchParams.get('category');
+  const pageQueryParam = parseInt(searchParams.get('page') ?? '0');
   const categoryByDefault = 't-shirt'
   const [category, setCategory] = React.useState<string>(categoryQueryParam ?? categoryByDefault);
   const [minPrice, setMinPrice] = React.useState<string>('');
   const [maxPrice, setMaxPrice] = React.useState<string>('');
   const [forWho, setForWho] = React.useState<string>('');
-  const [page, setPage] = React.useState<number>(1);
+  const [page, setPage] = React.useState<number>(pageQueryParam || 1);
   const [pages, setPages] = React.useState<number>(0);
 
   useEffect(() => {
@@ -35,6 +36,12 @@ function App() {
       })
 
   }, [searchParams.toString()])
+
+  useEffect(() => {
+    searchParams.set('page', '1')
+    setPage(1)
+    setSearchParams(searchParams)
+  }, [category])
 
   return (
     <div className="App" style={{ backgroundColor: '#ebebeb', minHeight: '100vh', paddingBottom: '20px' }}>
@@ -213,8 +220,6 @@ const ProductList: FC<{
   onPageChange: (value: number) => void,
   pages: number,
 }> = ({ products, page, onPageChange, pages }) => {
-
-  const [searchParams, setSearchParams] = useSearchParams();
 
   return (
     <div>
