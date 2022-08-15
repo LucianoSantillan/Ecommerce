@@ -237,12 +237,14 @@ const ProductList: FC<{
         {products.length === 0 && <div>No products found</div>}
         {products.map((product, index) => {
           return (
-            <ActionAreaCard
-              _key={product.id}
-              imgUrl={product.imgUrl}
-              title={product.name}
-              description={product.description}
-              price={product.price} />
+
+            <div key={product.id}>
+              <ActionAreaCard
+                imgUrl={product.imgUrl}
+                title={product.name}
+                description={product.description}
+                price={product.price} />
+            </div>
           )
         })}
       </div>
