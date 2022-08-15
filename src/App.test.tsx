@@ -1,11 +1,38 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 
-test('renders learn react link', async () => {
+test('should show products received from api', async () => {
   render(<BrowserRouter>
     <App /></BrowserRouter>);
   await screen.findByText('remera negra');
+  await screen.findByText('remera rosa');
+});
 
+test('should indicate page 1 when init', async () => {
+  render(<BrowserRouter>
+    <App /></BrowserRouter>);
+  const buttonPage1 = await screen.findByText('1', { selector: 'button' })
+  expect(buttonPage1).toHaveAttribute('aria-current', 'true');
+});
+
+test('should show page 2 button as selected when choosed', async () => {
+  await render(<BrowserRouter>
+    <App /></BrowserRouter>);
+  const buttonPage2 = await screen.findByText('2', { selector: 'button' })
+  await act(() => userEvent.click(buttonPage2))
+  await waitFor(() => {
+    expect(buttonPage2).toHaveAttribute('aria-current', 'true');
+  })
+});
+
+test('should show page 2 writen in url when page 2 button is clicked', async () => {
+  render(<BrowserRouter>
+    <App /></BrowserRouter>);
+  const buttonPage2 = await screen.findByText('2', { selector: 'button' })
+  await act(() => userEvent.click(buttonPage2))
+  expect(new URLSearchParams(window.location.search).get('page')).toBe('2')
 });

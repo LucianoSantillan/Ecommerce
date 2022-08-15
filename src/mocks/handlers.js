@@ -16,6 +16,17 @@ export const handlers = [
                 "total": 4
             }
         }
+        if (category === 't-shirt' && page === '2') {
+            response = {
+                "products": [
+                    { "id": 3, "name": "remera violeta", "for_who": "man", "description": "descripcion 3", "category": "t-shirt", "price": 150, "imgUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUtM3J8eVKEh9MBlZfhX1rKegTKmAjBu7IzBWIzuRHTUW_O7cgopqflc2g-Wm_rVGNNlE&usqp=CAU" },
+                    { "id": 4, "name": "remera gris", "for_who": "woman", "description": "descripcion 4", "category": "t-shirt", "price": 110, "imgUrl": "https://www.estarguapas.com/pics/2021/04/20/killer-whale-camiseta-mujer-manga-corta-algodon-basica-rosa-s-47369.jpg" }
+                ],
+                "currentPage": "2",
+                "pages": 2,
+                "total": 4
+            }
+        }
         return res(ctx.json(response))
     })
 ]
