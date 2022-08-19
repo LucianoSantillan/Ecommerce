@@ -167,7 +167,7 @@ const Filter: FC<{
             <FormControl>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={forWho}
+                value={forWho}
                 name="radio-buttons-group"
                 onChange={(event, value) => {
                   onForWhoChange(value)
