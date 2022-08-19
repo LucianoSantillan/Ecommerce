@@ -42,3 +42,22 @@ test('should show found products total from request response', async () => {
     <App /></BrowserRouter>);
   await screen.findByText('4 Product/s found');
 });
+
+test('should set "Lower price" option as default value', async () => {
+  await render(<BrowserRouter>
+    <App /></BrowserRouter>);
+  const select = await screen.findByLabelText('Order by')
+  await act(() => userEvent.click(select))
+  const lowerPriceOption = await screen.findByRole('option', { name: 'Lower price' }) as HTMLOptionElement
+  expect(lowerPriceOption.selected).toBe(true);
+});
+
+test('should show the selected option when it is choosed', async () => {
+  await render(<BrowserRouter>
+    <App /></BrowserRouter>);
+  const select = await screen.findByLabelText('Order by')
+  await act(() => userEvent.click(select))
+  const higherPriceOption = await screen.findByRole('option', { name: 'Higher price' }) as HTMLOptionElement
+  await act(() => userEvent.click(higherPriceOption))
+  expect(higherPriceOption.selected).toBe(true);
+});

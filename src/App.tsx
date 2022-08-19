@@ -1,6 +1,6 @@
-import React, { FC, useEffect } from 'react';
+import React, { ChangeEvent, FC, useEffect } from 'react';
 import './App.css';
-import { Avatar, Button, Card, FormControl, FormControlLabel, Icon, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Radio, RadioGroup, Select, Typography } from '@mui/material';
+import { Card, FormControl, FormControlLabel, Icon, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Radio, RadioGroup, Select, SelectChangeEvent, Typography } from '@mui/material';
 import ActionAreaCard from './components/product';
 import { Navbar } from './components/navbar';
 import axios from 'axios';
@@ -13,6 +13,7 @@ function App() {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryQueryParam = searchParams.get('category');
   const pageQueryParam = parseInt(searchParams.get('page') ?? '0');
+  const orderByQueryParam = searchParams.get('orderBy');
   const categoryByDefault = 't-shirt'
   const [category, setCategory] = React.useState<string>(categoryQueryParam ?? categoryByDefault);
   const [minPrice, setMinPrice] = React.useState<string>('');
@@ -21,12 +22,24 @@ function App() {
   const [page, setPage] = React.useState<number>(pageQueryParam || 1);
   const [pages, setPages] = React.useState<number>(0);
   const [totalItemsFound, setTotalItemsFound] = React.useState<number>(0);
+  const [orderedBy, setOrderedBy] = React.useState<string>(orderByQueryParam || 'lowerPrice');
 
   useEffect(() => {
     let url = `http://localhost:4000/api/products?${searchParams.toString()}`
 
     if (!categoryQueryParam) {
-      url = `http://localhost:4000/api/products?category=${categoryByDefault}&${searchParams.toString()}`
+      searchParams.set('category', categoryByDefault);
+      url = `http://localhost:4000/api/products?${searchParams.toString()}`
+    }
+
+    if (!pageQueryParam) {
+      searchParams.set('page', pageQueryParam.toString());
+      url = `http://localhost:4000/api/products?${searchParams.toString()}`
+    }
+
+    if (orderByQueryParam) {
+      searchParams.set('orderBy', orderByQueryParam.toString());
+      url = `http://localhost:4000/api/products?${searchParams.toString()}`
     }
 
     axios
@@ -44,6 +57,13 @@ function App() {
     setPage(1)
     setSearchParams(searchParams)
   }, [category, forWho])
+
+  const onChangeOrderBy = (event: SelectChangeEvent<string>) => {
+    const newValue = event.target.value;
+    setOrderedBy(newValue);
+    searchParams.set('orderBy', newValue)
+    setSearchParams(searchParams);
+  }
 
   return (
     <div className="App" style={{ backgroundColor: '#ebebeb', minHeight: '100vh', paddingBottom: '20px' }}>
@@ -78,6 +98,8 @@ function App() {
           }}
           pages={pages}
           totalItemsFound={totalItemsFound}
+          orderedBy={orderedBy}
+          onChangeOrderBy={onChangeOrderBy}
         />
 
       </div>
@@ -223,7 +245,9 @@ const ProductList: FC<{
   onPageChange: (value: number) => void,
   pages: number,
   totalItemsFound: number,
-}> = ({ products, page, onPageChange, pages, totalItemsFound }) => {
+  onChangeOrderBy: (e: SelectChangeEvent<string>) => void,
+  orderedBy: string,
+}> = ({ products, page, onPageChange, pages, totalItemsFound, onChangeOrderBy, orderedBy }) => {
 
   return (
     <div>
@@ -233,8 +257,8 @@ const ProductList: FC<{
           <div style={{ flex: 1, padding: '0 20px' }}>
             <Separator />
           </div>
-          <div style={{ marginRight: '5px' }}>Ordenar por</div>
-          <OrderBySelector />
+          <InputLabel style={{ marginRight: '5px' }} id="demo-simple-select-label">Order by</InputLabel>
+          <OrderBySelector onChangeOrderBy={onChangeOrderBy} orderedBy={orderedBy} />
         </div>
       </Card>
       <div style={{ display: 'grid', gap: '5px', minWidth: '900px', }}>
@@ -269,20 +293,20 @@ const ProductList: FC<{
 }
 
 export default App;
-function OrderBySelector() {
-  return <FormControl size="small">
+const OrderBySelector: FC<{ onChangeOrderBy: (e: SelectChangeEvent<string>) => void, orderedBy: string }> = ({ onChangeOrderBy, orderedBy }) => {
+  return <FormControl size="small" sx={{ minWidth: '145px' }}>
     {/* <InputLabel id="demo-simple-select-label">Order by</InputLabel> */}
     <Select
       labelId="demo-simple-select-label"
       id="demo-simple-select"
-      value={10}
-      // label="Age"
-      onChange={() => { }}
+      value={orderedBy}
+      onChange={onChangeOrderBy}
     >
-      <MenuItem value={10}>Ten</MenuItem>
-      <MenuItem value={20}>Twenty</MenuItem>
-      <MenuItem value={30}>Thirty</MenuItem>
+      <MenuItem value={'lowerPrice'}>Lower price</MenuItem>
+      <MenuItem value={'higherPrice'}>Higher price</MenuItem>
     </Select>
   </FormControl>;
 }
+
+type OrderByValues = "lowerPrice" | "higherPrice";
 
