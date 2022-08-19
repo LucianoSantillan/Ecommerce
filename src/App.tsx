@@ -1,11 +1,11 @@
-import React, { ChangeEvent, FC, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import './App.css';
-import { Card, FormControl, FormControlLabel, Icon, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Radio, RadioGroup, Select, SelectChangeEvent, Typography } from '@mui/material';
+import { Card, FormControl, FormControlLabel, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Radio, RadioGroup, Select, SelectChangeEvent, Typography } from '@mui/material';
 import ActionAreaCard from './components/product';
 import { Navbar } from './components/navbar';
 import axios from 'axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, ShoppingCart } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
 
 function App() {
 
@@ -15,14 +15,16 @@ function App() {
   const pageQueryParam = parseInt(searchParams.get('page') ?? '0');
   const orderByQueryParam = searchParams.get('orderBy');
   const categoryByDefault = 't-shirt'
+  const pageByDefault = 1
+  const orderByDefault = 'lowerPrice'
   const [category, setCategory] = React.useState<string>(categoryQueryParam ?? categoryByDefault);
   const [minPrice, setMinPrice] = React.useState<string>('');
   const [maxPrice, setMaxPrice] = React.useState<string>('');
   const [forWho, setForWho] = React.useState<string>('');
-  const [page, setPage] = React.useState<number>(pageQueryParam || 1);
+  const [page, setPage] = React.useState<number>(pageQueryParam || pageByDefault);
   const [pages, setPages] = React.useState<number>(0);
   const [totalItemsFound, setTotalItemsFound] = React.useState<number>(0);
-  const [orderedBy, setOrderedBy] = React.useState<string>(orderByQueryParam || 'lowerPrice');
+  const [orderedBy, setOrderedBy] = React.useState<string>(orderByQueryParam || orderByDefault);
 
   useEffect(() => {
     let url = `http://localhost:4000/api/products?${searchParams.toString()}`
@@ -33,14 +35,17 @@ function App() {
     }
 
     if (!pageQueryParam) {
-      searchParams.set('page', pageQueryParam.toString());
+      searchParams.set('page', pageByDefault.toString());
       url = `http://localhost:4000/api/products?${searchParams.toString()}`
     }
 
-    if (orderByQueryParam) {
-      searchParams.set('orderBy', orderByQueryParam.toString());
+    if (!orderByQueryParam) {
+      searchParams.set('orderBy', orderByDefault);
       url = `http://localhost:4000/api/products?${searchParams.toString()}`
     }
+
+    setCategory(searchParams.get('category') as string)
+    setPage(pageQueryParam)
 
     axios
       .get(url)
@@ -132,7 +137,6 @@ const Filter: FC<{
 
     let navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-
     return (
       <Card style={{ padding: '10px', marginRight: '15px', height: 'auto' }}>
         <div style={{ marginRight: '10px', display: 'flex', flexDirection: 'column', alignItems: 'left', textAlign: 'left' }}>
@@ -141,7 +145,7 @@ const Filter: FC<{
             <FormControl>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={category}
+                value={category}
                 name="radio-buttons-group"
                 onChange={(event, value) => {
                   onCategoryChange(value)
