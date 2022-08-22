@@ -1,9 +1,9 @@
 import '../../App.css';
 import { Button, CardContent, CardMedia, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Separator } from '../../pages/ProductsList/ProductsList';
-import Counter from '../../components/counter';
-import { Navbar } from '../../components/navbar';
+import { Separator } from 'pages/ProductsList/ProductsList';
+import Counter from 'components/counter';
+import { Navbar } from 'components/navbar';
 
 
 export function ProductDetail() {
