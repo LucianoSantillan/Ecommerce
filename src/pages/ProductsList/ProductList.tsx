@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Card, InputLabel, Pagination, SelectChangeEvent } from '@mui/material';
-import ActionAreaCard from '../../components/product';
+import ActionAreaCard from 'components/product';
 import { Separator } from './Separator';
-import { OrderBySelector } from './ProductsList';
+import { OrderBySelector } from "./List/OrderBySelector";
 
 export const ProductList: FC<{
   products: any[];

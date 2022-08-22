@@ -1,5 +1,5 @@
-import React, { FC, useEffect } from 'react';
-import { FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import React, { useEffect } from 'react';
+import { SelectChangeEvent } from '@mui/material';
 import { Navbar } from 'components/navbar';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
@@ -134,17 +134,4 @@ function ProductsList() {
 }
 
 export default ProductsList;
-export const OrderBySelector: FC<{ onChangeOrderBy: (e: SelectChangeEvent<string>) => void, orderedBy: string }> = ({ onChangeOrderBy, orderedBy }) => {
-  return <FormControl size="small" sx={{ minWidth: '145px' }}>
-    {/* <InputLabel id="demo-simple-select-label">Order by</InputLabel> */}
-    <Select
-      labelId="demo-simple-select-label"
-      id="demo-simple-select"
-      value={orderedBy}
-      onChange={onChangeOrderBy}
-    >
-      <MenuItem value={'lowerPrice'}>Lower price</MenuItem>
-      <MenuItem value={'higherPrice'}>Higher price</MenuItem>
-    </Select>
-  </FormControl>;
-}
+
