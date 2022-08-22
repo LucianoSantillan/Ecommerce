@@ -4,7 +4,7 @@ import { Navbar } from 'components/navbar';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import Filter from './Filter/Filter';
-import { ProductList } from './ProductList';
+import { ProductList } from './List/ProductList';
 
 function ProductsList() {
 
