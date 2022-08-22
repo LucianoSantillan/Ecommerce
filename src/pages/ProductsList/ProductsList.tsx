@@ -1,10 +1,10 @@
 import React, { FC, useEffect } from 'react';
-import { Card, FormControl, InputLabel, MenuItem, Pagination, Select, SelectChangeEvent } from '@mui/material';
-import ActionAreaCard from '../../components/product';
-import { Navbar } from '../../components/navbar';
+import { FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Navbar } from 'components/navbar';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import Filter from './Filter/Filter';
+import { ProductList } from './ProductList';
 
 function ProductsList() {
 
@@ -133,65 +133,8 @@ function ProductsList() {
   );
 }
 
-export function Separator() {
-  return (<hr style={{ border: 'none', borderTop: '1px solid #bcccdc' }} />)
-}
-
-const ProductList: FC<{
-  products: any[],
-  page: number,
-  onPageChange: (value: number) => void,
-  pages: number,
-  totalItemsFound: number,
-  onChangeOrderBy: (e: SelectChangeEvent<string>) => void,
-  orderedBy: string,
-}> = ({ products, page, onPageChange, pages, totalItemsFound, onChangeOrderBy, orderedBy }) => {
-
-  return (
-    <div>
-      <Card style={{ marginBottom: '15px' }}>
-        <div style={{ display: 'flex', padding: '15px', alignItems: 'center' }}>
-          <div>{totalItemsFound} Product/s found</div>
-          <div style={{ flex: 1, padding: '0 20px' }}>
-            <Separator />
-          </div>
-          <InputLabel style={{ marginRight: '5px' }} id="demo-simple-select-label">Order by</InputLabel>
-          <OrderBySelector onChangeOrderBy={onChangeOrderBy} orderedBy={orderedBy} />
-        </div>
-      </Card>
-      <div style={{ display: 'grid', gap: '5px', minWidth: '900px', }}>
-        {products.length === 0 && <div>No products found</div>}
-        {products.map((product, index) => {
-          return (
-
-            <div key={product.id}>
-              <ActionAreaCard
-                imgUrl={product.imgUrl}
-                title={product.name}
-                description={product.description}
-                price={product.price} />
-            </div>
-          )
-        })}
-      </div>
-      {!!pages && (
-        <Card style={{ width: 'fit-content', padding: '10px', margin: 'auto', marginTop: '15px' }}>
-          <Pagination
-            count={pages}
-            variant="outlined"
-            color="primary"
-            page={page}
-            size="large"
-            onChange={(_, page) => onPageChange(page)} />
-        </Card>
-      )}
-
-    </div >
-  )
-}
-
 export default ProductsList;
-const OrderBySelector: FC<{ onChangeOrderBy: (e: SelectChangeEvent<string>) => void, orderedBy: string }> = ({ onChangeOrderBy, orderedBy }) => {
+export const OrderBySelector: FC<{ onChangeOrderBy: (e: SelectChangeEvent<string>) => void, orderedBy: string }> = ({ onChangeOrderBy, orderedBy }) => {
   return <FormControl size="small" sx={{ minWidth: '145px' }}>
     {/* <InputLabel id="demo-simple-select-label">Order by</InputLabel> */}
     <Select
