@@ -4,7 +4,7 @@ import { Navbar } from 'components/navbar';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import Filter from './Filter/Filter';
-import { ProductList } from './List/ProductList';
+import { List } from './List/List';
 
 function ProductsList() {
 
@@ -95,7 +95,6 @@ function ProductsList() {
 
   return (
     <div className="App" style={{ backgroundColor: '#ebebeb', minHeight: '100vh', paddingBottom: '20px' }}>
-
       <Navbar />
       <div className='container' style={{ display: 'inline-flex', margin: 'auto' }}>
         <Filter
@@ -112,7 +111,7 @@ function ProductsList() {
           forWho={forWho}
           onForWhoChange={onForWhoChange}
         />
-        <ProductList
+        <List
           products={products}
           page={page}
           onPageChange={(newValue) => {
@@ -127,8 +126,6 @@ function ProductsList() {
         />
 
       </div>
-
-
     </div>
   );
 }

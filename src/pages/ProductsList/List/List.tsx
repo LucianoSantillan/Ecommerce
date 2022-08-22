@@ -4,7 +4,7 @@ import ActionAreaCard from 'components/product';
 import { Separator } from '../Separator';
 import { OrderBySelector } from "./OrderBySelector";
 
-export const ProductList: FC<{
+export const List: FC<{
   products: any[];
   page: number;
   onPageChange: (value: number) => void;
