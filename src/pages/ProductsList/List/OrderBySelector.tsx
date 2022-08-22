@@ -10,8 +10,13 @@ export const OrderBySelector: FC<{ onChangeOrderBy: (e: SelectChangeEvent<string
       value={orderedBy}
       onChange={onChangeOrderBy}
     >
-      <MenuItem value={'lowerPrice'}>Lower price</MenuItem>
-      <MenuItem value={'higherPrice'}>Higher price</MenuItem>
+      <MenuItem value={optionValues.fromHighToLowPrice}>From high to low price</MenuItem>
+      <MenuItem value={optionValues.fromLowToHighPrice}>From low to high price</MenuItem>
     </Select>
   </FormControl>;
 };
+
+export const optionValues = {
+  fromHighToLowPrice: 'fromHighToLowPrice',
+  fromLowToHighPrice: 'fromLowToHighPrice'
+}

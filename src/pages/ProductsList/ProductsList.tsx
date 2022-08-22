@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import Filter from './Filter/Filter';
 import { List } from './List/List';
+import { optionValues } from './List/OrderBySelector';
 
 function ProductsList() {
 
@@ -12,7 +13,7 @@ function ProductsList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryByDefault = 't-shirt'
   const pageByDefault = 1
-  const orderByDefault = 'lowerPrice'
+  const orderByDefault = optionValues.fromHighToLowPrice
   const categoryQueryParam = searchParams.get('category') || categoryByDefault;
   const pageQueryParam = parseInt(searchParams.get('page') || '1');
   const forWhoParam = searchParams.get('forWho') || '';
