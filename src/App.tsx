@@ -4,51 +4,67 @@ import { Card, FormControl, FormControlLabel, IconButton, InputAdornment, InputL
 import ActionAreaCard from './components/product';
 import { Navbar } from './components/navbar';
 import axios from 'axios';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Search } from '@mui/icons-material';
 
 function App() {
 
   const [products, setProducts] = React.useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const categoryQueryParam = searchParams.get('category');
-  const pageQueryParam = parseInt(searchParams.get('page') ?? '0');
-  const orderByQueryParam = searchParams.get('orderBy');
   const categoryByDefault = 't-shirt'
   const pageByDefault = 1
   const orderByDefault = 'lowerPrice'
-  const [category, setCategory] = React.useState<string>(categoryQueryParam ?? categoryByDefault);
+  const categoryQueryParam = searchParams.get('category') || categoryByDefault;
+  const pageQueryParam = parseInt(searchParams.get('page') || '1');
+  const orderByQueryParam = searchParams.get('orderBy') || orderByDefault;
+
+  const category: string = categoryQueryParam
+
+  const setCategory = (value: string) => {
+    searchParams.set('category', value)
+    setSearchParams(searchParams)
+  }
+
+
+  const page: number = pageQueryParam
+
+  const setPage = (value: number) => {
+    searchParams.set('page', value.toString())
+    setSearchParams(searchParams)
+  }
+
   const [minPrice, setMinPrice] = React.useState<string>('');
   const [maxPrice, setMaxPrice] = React.useState<string>('');
   const [forWho, setForWho] = React.useState<string>('');
-  const [page, setPage] = React.useState<number>(pageQueryParam || pageByDefault);
   const [pages, setPages] = React.useState<number>(0);
   const [totalItemsFound, setTotalItemsFound] = React.useState<number>(0);
-  const [orderedBy, setOrderedBy] = React.useState<string>(orderByQueryParam || orderByDefault);
+  const [orderedBy, setOrderedBy] = React.useState<string>(orderByQueryParam);
 
   useEffect(() => {
-    let url = `http://localhost:4000/api/products?${searchParams.toString()}`
+    let url = new URL('http://localhost:4000/api/products')
+
+    let _category = categoryQueryParam
+    let _page = pageQueryParam
+    let _orderBy = orderByQueryParam
 
     if (!categoryQueryParam) {
-      searchParams.set('category', categoryByDefault);
-      url = `http://localhost:4000/api/products?${searchParams.toString()}`
+      _category = categoryByDefault
     }
 
     if (!pageQueryParam) {
-      searchParams.set('page', pageByDefault.toString());
-      url = `http://localhost:4000/api/products?${searchParams.toString()}`
+      _page = pageByDefault
     }
 
     if (!orderByQueryParam) {
-      searchParams.set('orderBy', orderByDefault);
-      url = `http://localhost:4000/api/products?${searchParams.toString()}`
+      _orderBy = orderByDefault
     }
 
-    setCategory(searchParams.get('category') as string)
-    setPage(pageQueryParam)
+    url.searchParams.set('category', _category);
+    url.searchParams.set('page', _page.toString());
+    url.searchParams.set('orderBy', _orderBy.toString());
 
     axios
-      .get(url)
+      .get(url.href)
       .then(function (response) {
         setProducts(response.data.products);
         setPages(response.data.pages);
@@ -57,17 +73,26 @@ function App() {
 
   }, [searchParams.toString()])
 
-  useEffect(() => {
-    searchParams.set('page', '1')
-    setPage(1)
-    setSearchParams(searchParams)
-  }, [category, forWho])
 
   const onChangeOrderBy = (event: SelectChangeEvent<string>) => {
     const newValue = event.target.value;
     setOrderedBy(newValue);
     searchParams.set('orderBy', newValue)
     setSearchParams(searchParams);
+  }
+
+  const onCategoryChange = (newValue: string) => {
+    if (pageQueryParam !== 1) {
+      setPage(1)
+    }
+    setCategory(newValue)
+  }
+
+  const onForWhoChange = (newValue: string) => {
+    searchParams.set('page', '1')
+    setSearchParams(searchParams)
+    setPage(1)
+    setForWho(newValue)
   }
 
   return (
@@ -77,9 +102,7 @@ function App() {
       <div className='container' style={{ display: 'inline-flex', margin: 'auto' }}>
         <Filter
           category={category}
-          onCategoryChange={(newValue) => {
-            setCategory(newValue)
-          }}
+          onCategoryChange={onCategoryChange}
           minPrice={minPrice}
           maxPrice={maxPrice}
           onMinPriceChange={(newValue) => {
@@ -89,9 +112,7 @@ function App() {
             setMaxPrice(newValue)
           }}
           forWho={forWho}
-          onForWhoChange={(newValue) => {
-            setForWho(newValue)
-          }}
+          onForWhoChange={onForWhoChange}
         />
         <ProductList
           products={products}
@@ -134,8 +155,6 @@ const Filter: FC<{
     forWho,
     onForWhoChange
   }) => {
-
-    let navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     return (
       <Card style={{ padding: '10px', marginRight: '15px', height: 'auto' }}>
@@ -149,8 +168,6 @@ const Filter: FC<{
                 name="radio-buttons-group"
                 onChange={(event, value) => {
                   onCategoryChange(value)
-                  searchParams.set('category', value)
-                  navigate('?' + searchParams.toString())
                 }}
               >
                 <FormControlLabel value="t-shirt" control={<Radio size='small' />} label="T-shirt" />
@@ -311,6 +328,3 @@ const OrderBySelector: FC<{ onChangeOrderBy: (e: SelectChangeEvent<string>) => v
     </Select>
   </FormControl>;
 }
-
-type OrderByValues = "lowerPrice" | "higherPrice";
-
