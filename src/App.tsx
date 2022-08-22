@@ -16,6 +16,7 @@ function App() {
   const orderByDefault = 'lowerPrice'
   const categoryQueryParam = searchParams.get('category') || categoryByDefault;
   const pageQueryParam = parseInt(searchParams.get('page') || '1');
+  const forWhoParam = searchParams.get('forWho') || '';
   const orderByQueryParam = searchParams.get('orderBy') || orderByDefault;
 
   const category: string = categoryQueryParam
@@ -33,9 +34,16 @@ function App() {
     setSearchParams(searchParams)
   }
 
+  
+  const forWho: string = forWhoParam
+
+  const setForWho = (value: string) => {
+    searchParams.set('forWho', value)
+    setSearchParams(searchParams)
+  }
+
   const [minPrice, setMinPrice] = React.useState<string>('');
   const [maxPrice, setMaxPrice] = React.useState<string>('');
-  const [forWho, setForWho] = React.useState<string>('');
   const [pages, setPages] = React.useState<number>(0);
   const [totalItemsFound, setTotalItemsFound] = React.useState<number>(0);
   const [orderedBy, setOrderedBy] = React.useState<string>(orderByQueryParam);
@@ -43,25 +51,16 @@ function App() {
   useEffect(() => {
     let url = new URL('http://localhost:4000/api/products')
 
-    let _category = categoryQueryParam
-    let _page = pageQueryParam
     let _orderBy = orderByQueryParam
-
-    if (!categoryQueryParam) {
-      _category = categoryByDefault
-    }
-
-    if (!pageQueryParam) {
-      _page = pageByDefault
-    }
 
     if (!orderByQueryParam) {
       _orderBy = orderByDefault
     }
 
-    url.searchParams.set('category', _category);
-    url.searchParams.set('page', _page.toString());
+    url.searchParams.set('category', category);
+    url.searchParams.set('page', page.toString());
     url.searchParams.set('orderBy', _orderBy.toString());
+    url.searchParams.set('forWho', forWho);
 
     axios
       .get(url.href)
@@ -89,9 +88,9 @@ function App() {
   }
 
   const onForWhoChange = (newValue: string) => {
-    searchParams.set('page', '1')
-    setSearchParams(searchParams)
-    setPage(1)
+    if (pageQueryParam !== 1) {
+      setPage(1)
+    }
     setForWho(newValue)
   }
 
@@ -188,11 +187,6 @@ const Filter: FC<{
                 name="radio-buttons-group"
                 onChange={(event, value) => {
                   onForWhoChange(value)
-                  searchParams.set('forWho', value)
-                  if (!value) {
-                    searchParams.delete('forWho')
-                  }
-                  setSearchParams(searchParams);
                 }}
               >
                 <FormControlLabel value="" control={<Radio size='small' />} label="Not specified" />
