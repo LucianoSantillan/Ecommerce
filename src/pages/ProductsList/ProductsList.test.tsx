@@ -1,9 +1,50 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import ProductsList from 'pages/ProductsList/ProductsList';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
+import axios from 'axios';
+
+test('should get products using the correct url when filters change', async () => {
+  const axiosGet = jest.spyOn(
+    axios,
+    'get'
+  );
+  axiosGet.mockResolvedValue({
+    data: {
+      "products": [
+        { "id": 2, "name": "remera rosa", "for_who": "woman", "description": "descripcion 2", "category": "t-shirt", "price": 110, "imgUrl": "https://www.estarguapas.com/pics/2021/04/20/killer-whale-camiseta-mujer-manga-corta-algodon-basica-rosa-s-47369.jpg" }
+      ],
+      "currentPage": "1",
+      "pages": 2,
+      "total": 4
+    }
+  })
+  render(<BrowserRouter>
+    <ProductsList /></BrowserRouter>);
+
+  expect(axios.get).lastCalledWith(`http://localhost:4000/api/products?category=t-shirt&page=1&orderBy=fromHighToLowPrice&forWho=`);
+
+  //IF SHOES CATEGORY IS SELECTED SHOULD REQUEST USING THE CORRECT QUERYPARAM
+  const shoesOption = await screen.findByRole('radio', { name: 'Shoes' })
+  userEvent.click(shoesOption)
+  await waitFor(() => { //DO THIS TO AVOID ASYNCHRONOUS UPDATE ERROR
+    screen.getByText('4 Product/s found')
+  })
+  expect(axios.get).lastCalledWith(`http://localhost:4000/api/products?category=shoes&page=1&orderBy=fromHighToLowPrice&forWho=`);
+
+  //IF FOR MAN CATEGORY IS SELECTED SHOULD REQUEST USING THE CORRECT QUERYPARAM
+  const forManOption = await screen.findByRole('radio', { name: 'Man' })
+  userEvent.click(forManOption)
+  expect(axios.get).lastCalledWith(`http://localhost:4000/api/products?category=shoes&page=1&orderBy=fromHighToLowPrice&forWho=man`);
+
+  //IF fromLowToHighPrice FILTER IS SELECTED SHOULD REQUEST USING THE CORRECT QUERYPARAM
+  const select = await screen.findByLabelText('Order by')
+  userEvent.click(select)
+  const fromLowToHighPriceOption = await screen.findByRole('option', { name: 'From low to high price' }) as HTMLOptionElement
+  userEvent.click(fromLowToHighPriceOption)
+  expect(axios.get).lastCalledWith(`http://localhost:4000/api/products?category=shoes&page=1&orderBy=fromLowToHighPrice&forWho=man`);
+});
 
 test('should show products received from api', async () => {
   render(<BrowserRouter>
