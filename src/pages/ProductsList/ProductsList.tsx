@@ -11,15 +11,17 @@ function ProductsList() {
 
   const [products, setProducts] = React.useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const categoryByDefault = 't-shirt'
-  const pageByDefault = 1
-  const orderByDefault = optionValues.fromHighToLowPrice
-  const categoryQueryParam = searchParams.get('category') || categoryByDefault;
-  const pageQueryParam = parseInt(searchParams.get('page') || '1');
   const forWhoParam = searchParams.get('forWho') || '';
-  const orderByQueryParam = searchParams.get('orderBy') || orderByDefault;
+  const orderBy = searchParams.get('orderBy') || optionValues.fromHighToLowPrice;
 
-  const category: string = categoryQueryParam
+  const setOrderedBy = (event: SelectChangeEvent<string>) => {
+    const newValue = event.target.value;
+    searchParams.set('orderBy', newValue)
+    setSearchParams(searchParams);
+  }
+
+
+  const category: string = searchParams.get('category') || 't-shirt';
 
   const setCategory = (value: string) => {
     searchParams.set('category', value)
@@ -27,14 +29,14 @@ function ProductsList() {
   }
 
 
-  const page: number = pageQueryParam
+  const page: number = parseInt(searchParams.get('page') || '1');
 
   const setPage = (value: number) => {
     searchParams.set('page', value.toString())
     setSearchParams(searchParams)
   }
 
-  
+
   const forWho: string = forWhoParam
 
   const setForWho = (value: string) => {
@@ -46,20 +48,13 @@ function ProductsList() {
   const [maxPrice, setMaxPrice] = React.useState<string>('');
   const [pages, setPages] = React.useState<number>(0);
   const [totalItemsFound, setTotalItemsFound] = React.useState<number>(0);
-  const [orderedBy, setOrderedBy] = React.useState<string>(orderByQueryParam);
 
   useEffect(() => {
     let url = new URL('http://localhost:4000/api/products')
 
-    let _orderBy = orderByQueryParam
-
-    if (!orderByQueryParam) {
-      _orderBy = orderByDefault
-    }
-
     url.searchParams.set('category', category);
     url.searchParams.set('page', page.toString());
-    url.searchParams.set('orderBy', _orderBy.toString());
+    url.searchParams.set('orderBy', orderBy);
     url.searchParams.set('forWho', forWho);
 
     axios
@@ -73,22 +68,19 @@ function ProductsList() {
   }, [searchParams.toString()])
 
 
-  const onChangeOrderBy = (event: SelectChangeEvent<string>) => {
-    const newValue = event.target.value;
-    setOrderedBy(newValue);
-    searchParams.set('orderBy', newValue)
-    setSearchParams(searchParams);
+  const onChangeOrderBy = (event: SelectChangeEvent<string>) => { 
+    setOrderedBy(event);
   }
 
   const onCategoryChange = (newValue: string) => {
-    if (pageQueryParam !== 1) {
+    if (page !== 1) {
       setPage(1)
     }
     setCategory(newValue)
   }
 
   const onForWhoChange = (newValue: string) => {
-    if (pageQueryParam !== 1) {
+    if (page !== 1) {
       setPage(1)
     }
     setForWho(newValue)
@@ -122,7 +114,7 @@ function ProductsList() {
           }}
           pages={pages}
           totalItemsFound={totalItemsFound}
-          orderedBy={orderedBy}
+          orderedBy={orderBy}
           onChangeOrderBy={onChangeOrderBy}
         />
 
