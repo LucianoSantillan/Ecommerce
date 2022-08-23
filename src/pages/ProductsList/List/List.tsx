@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Card, InputLabel, Pagination, SelectChangeEvent } from '@mui/material';
 import ActionAreaCard from 'components/product';
-import { Separator } from '../Separator';
+import { Separator } from '../../../components/Separator/Separator';
 import { OrderBySelector } from "./OrderBySelector";
 
 export const List: FC<{

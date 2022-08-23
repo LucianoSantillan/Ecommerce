@@ -1,5 +1,5 @@
 import { Button, CardContent, CardMedia, Typography } from '@mui/material';
-import { Separator } from "pages/ProductsList/Separator";
+import { Separator } from "components/Separator/Separator";
 import Counter from 'components/counter';
 import { Navbar } from 'components/navbar';
 
