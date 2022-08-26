@@ -12,6 +12,7 @@ const Filter: FC<{
     onMaxPriceChange: (newValue: string) => void,
     forWho: string,
     onForWhoChange: (newValue: string) => void,
+    onSearchByPrice: () => void,
 }> = (
     {
         category,
@@ -21,9 +22,17 @@ const Filter: FC<{
         onMinPriceChange,
         onMaxPriceChange,
         forWho,
-        onForWhoChange
+        onForWhoChange,
+        onSearchByPrice
     }) => {
-        const [searchParams, setSearchParams] = useSearchParams();
+
+        const [searchParams] = useSearchParams();
+
+        const minPriceQueryParam = searchParams.get('minPrice') || '';
+        const maxPriceQueryParam = searchParams.get('maxPrice') || '';
+
+        const searchByPriceButtonIsDisabled = minPriceQueryParam === minPrice && maxPriceQueryParam === maxPrice
+
         return (
             <Card style={{ padding: '10px', marginRight: '15px', height: 'auto' }}>
                 <div style={{ marginRight: '10px', display: 'flex', flexDirection: 'column', alignItems: 'left', textAlign: 'left' }}>
@@ -87,23 +96,14 @@ const Filter: FC<{
                             />
                         </FormControl>
                         <IconButton
+                            data-testid="go-search-by-price-btn"
                             size="large"
                             edge="start"
                             color="inherit"
                             aria-label="menu"
                             style={{ backgroundColor: '#1976d2' }}
-                            onClick={
-                                () => {
-                                    searchParams.set('minPrice', `${minPrice}`)
-                                    searchParams.set('maxPrice', `${maxPrice}`)
-                                    if (!minPrice) {
-                                        searchParams.delete('minPrice')
-                                    }
-                                    if (!maxPrice) {
-                                        searchParams.delete('maxPrice')
-                                    }
-                                    setSearchParams(searchParams)
-                                }}
+                            onClick={onSearchByPrice}
+                            disabled={searchByPriceButtonIsDisabled}
                         ><Search /></IconButton>
                     </div>
                 </div>

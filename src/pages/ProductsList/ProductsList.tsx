@@ -12,6 +12,9 @@ function ProductsList() {
   const [products, setProducts] = React.useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const forWhoParam = searchParams.get('forWho') || '';
+  const minPriceQueryParam = searchParams.get('minPrice') || '';
+  const maxPriceQueryParam = searchParams.get('maxPrice') || '';
+
   const orderBy = searchParams.get('orderBy') || optionValues.fromHighToLowPrice;
 
   const setOrderedBy = (event: SelectChangeEvent<string>) => {
@@ -49,6 +52,16 @@ function ProductsList() {
   const [pages, setPages] = React.useState<number>(0);
   const [totalItemsFound, setTotalItemsFound] = React.useState<number>(0);
 
+
+  useEffect(() => {
+    if (minPriceQueryParam !== minPrice) {
+      setMinPrice(minPriceQueryParam)
+    }
+    if (maxPriceQueryParam !== maxPrice) {
+      setMaxPrice(maxPriceQueryParam)
+    }
+  }, [minPriceQueryParam, maxPriceQueryParam])
+
   useEffect(() => {
     let url = new URL('http://localhost:4000/api/products')
 
@@ -56,6 +69,8 @@ function ProductsList() {
     url.searchParams.set('page', page.toString());
     url.searchParams.set('orderBy', orderBy);
     url.searchParams.set('forWho', forWho);
+    url.searchParams.set('minPrice', minPriceQueryParam);
+    url.searchParams.set('maxPrice', maxPriceQueryParam);
 
     axios
       .get(url.href)
@@ -68,7 +83,7 @@ function ProductsList() {
   }, [searchParams.toString()])
 
 
-  const onChangeOrderBy = (event: SelectChangeEvent<string>) => { 
+  const onChangeOrderBy = (event: SelectChangeEvent<string>) => {
     setOrderedBy(event);
   }
 
@@ -84,6 +99,21 @@ function ProductsList() {
       setPage(1)
     }
     setForWho(newValue)
+  }
+
+  const onSearchByPrice = () => {
+    if (page !== 1) {
+      setPage(1)
+    }
+    searchParams.set('minPrice', `${minPrice}`)
+    searchParams.set('maxPrice', `${maxPrice}`)
+    if (!minPrice) {
+      searchParams.delete('minPrice')
+    }
+    if (!maxPrice) {
+      searchParams.delete('maxPrice')
+    }
+    setSearchParams(searchParams)
   }
 
   return (
@@ -103,6 +133,7 @@ function ProductsList() {
           }}
           forWho={forWho}
           onForWhoChange={onForWhoChange}
+          onSearchByPrice={onSearchByPrice}
         />
         <List
           products={products}
