@@ -158,7 +158,7 @@ describe('ProductsList', () => {
     let minPriceInput = screen.getByPlaceholderText('Min')
     act(() => userEvent.type(minPriceInput, '1'))
     const searchBtn = await screen.findByTestId('go-search-by-price-btn')
-    await waitFor(() => {expect(searchBtn).not.toBeDisabled()})
+    await waitFor(() => { expect(searchBtn).not.toBeDisabled() })
   })
 
   test('when maxPrice is different from url query param. Go ahead btn should be enabled.', async () => {
@@ -167,7 +167,7 @@ describe('ProductsList', () => {
     let maxPriceInput = screen.getByPlaceholderText('Max')
     act(() => userEvent.type(maxPriceInput, '1'))
     const searchBtn = await screen.findByTestId('go-search-by-price-btn')
-    await waitFor(() => {expect(searchBtn).not.toBeDisabled()})
+    await waitFor(() => { expect(searchBtn).not.toBeDisabled() })
   })
 
   test('when the url comes with price query params then price inputs range should copy the same values', async () => {
@@ -177,6 +177,17 @@ describe('ProductsList', () => {
     let minPriceInput = screen.getByPlaceholderText('Min')
     expect(maxPriceInput).toHaveValue('800')
     await waitFor(() => expect(minPriceInput).toHaveValue('155'))
+  })
+
+  test('minPrice and maxPrice inputs should only accept digits', async () => {
+    render(<MemoryRouter initialEntries={['/?minPrice=155&maxPrice=800']}>
+      <ProductsList /></MemoryRouter>);
+    let maxPriceInput = screen.getByPlaceholderText('Max')
+    let minPriceInput = screen.getByPlaceholderText('Min')
+    act(() => userEvent.type(maxPriceInput, '15a,.9iey!"#$;:8912'))
+    act(() => userEvent.type(minPriceInput, '15a,.9iey!"#$;:8912'))
+    await waitFor(() => expect(maxPriceInput).toHaveValue('8001598912'))
+    await waitFor(() => expect(minPriceInput).toHaveValue('1551598912'))
   })
 
 })

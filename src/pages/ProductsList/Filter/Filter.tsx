@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { Card, FormControl, FormControlLabel, IconButton, InputAdornment, OutlinedInput, Radio, RadioGroup, Typography } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import { Search } from '@mui/icons-material';
+import { onlyDigits } from 'my_functions/only_digits/only_digits';
 
 const Filter: FC<{
     category: string,
@@ -82,7 +83,10 @@ const Filter: FC<{
                                 id="outlined-adornment-amount"
                                 placeholder='Min'
                                 value={minPrice}
-                                onChange={(event) => { onMinPriceChange(event.target.value) }}
+                                onChange={(event) => {
+                                    if (onlyDigits(event.target.value) === false) return
+                                    onMinPriceChange(event.target.value)
+                                }}
                                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
                             />
                         </FormControl>
@@ -91,7 +95,10 @@ const Filter: FC<{
                                 id="outlined-adornment-amount"
                                 placeholder='Max'
                                 value={maxPrice}
-                                onChange={(event) => { onMaxPriceChange(event.target.value) }}
+                                onChange={(event) => {
+                                    if (onlyDigits(event.target.value) === false) return
+                                    onMaxPriceChange(event.target.value)
+                                }}
                                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
                             />
                         </FormControl>
