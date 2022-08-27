@@ -34,6 +34,16 @@ const Filter: FC<{
 
         const searchByPriceButtonIsDisabled = minPriceQueryParam === minPrice && maxPriceQueryParam === maxPrice
 
+        const _onMinPriceChange = (newValue: string) => {
+            if (onlyDigits(newValue) === false && newValue !== '') return
+            onMinPriceChange(newValue)
+        }
+
+        const _onMaxPriceChange = (newValue: string) => {
+            if (onlyDigits(newValue) === false && newValue !== '') return
+            onMaxPriceChange(newValue)
+        }
+
         return (
             <Card style={{ padding: '10px', marginRight: '15px', height: 'auto' }}>
                 <div style={{ marginRight: '10px', display: 'flex', flexDirection: 'column', alignItems: 'left', textAlign: 'left' }}>
@@ -44,7 +54,7 @@ const Filter: FC<{
                                 aria-labelledby="demo-radio-buttons-group-label"
                                 value={category}
                                 name="radio-buttons-group"
-                                onChange={(event, value) => {
+                                onChange={(_, value) => {
                                     onCategoryChange(value)
                                 }}
                             >
@@ -64,9 +74,7 @@ const Filter: FC<{
                                 aria-labelledby="demo-radio-buttons-group-label"
                                 value={forWho}
                                 name="radio-buttons-group"
-                                onChange={(event, value) => {
-                                    onForWhoChange(value)
-                                }}
+                                onChange={(_, value) => onForWhoChange(value)}
                             >
                                 <FormControlLabel value="" control={<Radio size='small' />} label="Not specified" />
                                 <FormControlLabel value="man" control={<Radio size='small' />} label="Man" />
@@ -83,10 +91,7 @@ const Filter: FC<{
                                 id="outlined-adornment-amount"
                                 placeholder='Min'
                                 value={minPrice}
-                                onChange={(event) => {
-                                    if (onlyDigits(event.target.value) === false) return
-                                    onMinPriceChange(event.target.value)
-                                }}
+                                onChange={(event) => {_onMinPriceChange(event.target.value)}}
                                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
                             />
                         </FormControl>
@@ -95,10 +100,7 @@ const Filter: FC<{
                                 id="outlined-adornment-amount"
                                 placeholder='Max'
                                 value={maxPrice}
-                                onChange={(event) => {
-                                    if (onlyDigits(event.target.value) === false) return
-                                    onMaxPriceChange(event.target.value)
-                                }}
+                                onChange={(event) => {_onMaxPriceChange(event.target.value)}}
                                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
                             />
                         </FormControl>
